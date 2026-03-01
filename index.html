@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>EV Tracker</title>
+        <style>
+            .ev-row {
+                display:flex;
+                flex-direction: row;
+                align-items: center;
+                width: 25%;
+            }
+            .ev-row > h4 {
+                padding-right: 4px;
+            }
+            .ev-row > span {
+                flex-grow: 1;
+            }
+        </style>
+    </head>
+    <body>
+        <label>Pokemon</label>
+        <input type="text"></input>
+
+        <div class="ev-row">
+            <h4>HP:</h4>
+            <input id="hp"></input>
+            <button onclick="add('hp', 1)">+1</button>
+            <button onclick="add('hp', 2)">+2</button>
+            <button onclick="add('hp', 3)">+3</button>
+        </div>
+        <div class="ev-row">
+            <h4>Attack:</h4>
+            <input id="atk"></input>
+            <button onclick="add('atk', 1)">+1</button>
+            <button onclick="add('atk', 2)">+2</button>
+            <button onclick="add('atk', 3)">+3</button>
+        </div>
+        <div class="ev-row">
+            <h4>Defense:</h4>
+            <input id="def"></input>
+            <button onclick="add('def', 1)">+1</button>
+            <button onclick="add('def', 2)">+2</button>
+            <button onclick="add('def', 3)">+3</button>
+        </div>
+        <div class="ev-row">
+            <h4>Special Attack:</h4>
+            <input id="satk"></input>
+            <button onclick="add('satk', 1)">+1</button>
+            <button onclick="add('satk', 2)">+2</button>
+            <button onclick="add('satk', 3)">+3</button>
+        </div>
+        <div class="ev-row">
+            <h4>Special Defense:</h4>
+            <input id="sdef"></input>
+            <button onclick="add('sdef', 1)">+1</button>
+            <button onclick="add('sdef', 2)">+2</button>
+            <button onclick="add('sdef', 3)">+3</button>
+        </div>
+        <div class="ev-row">
+            <h4>Speed:</h4>
+            <input id="spd"></input>
+            <button onclick="add('spd', 1)">+1</button>
+            <button onclick="add('spd', 2)">+2</button>
+            <button onclick="add('spd', 3)">+3</button>
+        </div>
+
+        <p id="total"></p>
+    </body>
+
+    <script>
+        evs = {
+            "hp": 0,
+            "atk": 0,
+            "def": 0,
+            "satk": 0,
+            "sdef": 0,
+            "spd": 0
+        }
+        function initEVs() {
+            for (const [k, v] of Object.entries(evs)) {
+                if (localStorage.getItem(k) === null) {
+                    localStorage.setItem(k, "0");
+                }
+
+                
+
+                document.getElementById(k).addEventListener("input", () => {
+                    localStorage.setItem(k, document.getElementById(k).value);
+                });
+            }
+        }
+
+        function draw() {
+            let total = 0;
+            for (const [k, v] of Object.entries(evs)) {
+                let val = localStorage.getItem(k)
+                document.getElementById(k).value = val;
+                total += val;
+            }
+
+            document.getElementById("total").innerText = `Total EVS: ${total}/510`;
+        }
+
+        function add(prop, qty) {
+            let val = parseInt(localStorage.getItem(prop))
+            localStorage.setItem(prop, val + qty);
+            draw();
+        }
+        
+        initEVs();
+        draw();
+     </script>
+</html>    
