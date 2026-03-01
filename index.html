@@ -95,7 +95,7 @@
             for (const [k, v] of Object.entries(evs)) {
                 let val = localStorage.getItem(k)
                 document.getElementById(k).value = val;
-                total += val;
+                total += parseInt(val);
             }
 
             document.getElementById("total").innerText = `Total EVS: ${total}/510`;
