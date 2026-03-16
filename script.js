@@ -170,9 +170,60 @@ function add(prop, qty) {
     draw();
 }
 
+function encodeExportInt(pokemon) {
+    let stats = {
+        hp: parseInt(localStorage.getItem(`${pokemon}-hp`)),
+        atk: parseInt(localStorage.getItem(`${pokemon}-atk`)),
+        def: parseInt(localStorage.getItem(`${pokemon}-def`)),
+        satk: parseInt(localStorage.getItem(`${pokemon}-satk`)),
+        sdef: parseInt(localStorage.getItem(`${pokemon}-sdef`)),
+        spd: parseInt(localStorage.getItem(`${pokemon}-spd`))
+    };
+
+    result = "";
+
+    for (stat of Object.values(stats)) {
+        let binary = stat.toString(2);
+        while (binary.length < 8) {
+            binary = "0" + binary;
+        }
+        result += binary;
+    }
+
+    alert(parseInt(result, 2));
+}
+
+function decodeExportInt(pokemon, number) {
+    let binary = number.toString(2);
+    // Pad to 48 bits (6 stats × 8 bits)
+    while (binary.length < 48) {
+        binary = "0" + binary;
+    }
+
+    for (let i = 0; i < STATS.length; i++) {
+        const chunk = binary.substring(i * 8, (i + 1) * 8);
+        const val = parseInt(chunk, 2);
+        localStorage.setItem(`${pokemon}-${STATS[i]}`, val);
+    }
+
+    draw();
+}
+
 function init() {
     initPokemon();
     setupStatListeners();
+
+    document.getElementById("export").addEventListener("click", () => {
+        if (!currentPokemon) return;
+        encodeExportInt(currentPokemon);
+    });
+
+    document.getElementById("import-btn").addEventListener("click", () => {
+        if (!currentPokemon) return;
+        const code = parseInt(document.getElementById("import-code").value);
+        if (isNaN(code)) return;
+        decodeExportInt(currentPokemon, code);
+    });
 
     // Restore saved pokemon on load
     const names = Object.keys(allPokemon);
